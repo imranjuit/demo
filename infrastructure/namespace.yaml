@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+meta
+  name: database
+---
+apiVersion: v1
+kind: Namespace
+meta
+  name: wordpress
