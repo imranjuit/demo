@@ -29,7 +29,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: wordpress-secret
-              key: WORDPRESS_DB_PASSWORD
+              key: DB_PASSWORD
         volumeMounts:
         - name: wordpress-storage
           mountPath: /var/www/html
