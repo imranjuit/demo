@@ -37,3 +37,13 @@ spec:
             secretKeyRef:
               name: mariadb-secret
               key: MYSQL_PASSWORD
+  volumeClaimTemplates:  # ADD THIS SECTION
+  - metadata:
+      name: db-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: standard
