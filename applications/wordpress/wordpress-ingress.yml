@@ -4,14 +4,10 @@ metadata:
   name: wordpress-ingress
   namespace: wordpress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
   ingressClassName: nginx
-  tls:
-    - hosts:
-        - wordpress.mnpspbd.com
-      secretName: wordpress-tls-secret
   rules:
     - host: wordpress.mnpspbd.com
       http:
@@ -20,7 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: wordpress-service 
+                name: wordpress-service
                 port:
                   number: 80
-
