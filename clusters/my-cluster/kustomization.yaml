@@ -6,4 +6,3 @@ resources:
   - ../../secrets
   - ../../databases
   - ../../applications
-  - decryption.yaml 
