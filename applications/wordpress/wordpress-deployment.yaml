@@ -4,7 +4,7 @@ metadata:
   name: wordpress
   namespace: wordpress
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: wordpress
@@ -33,12 +33,6 @@ spec:
         volumeMounts:
         - name: wordpress-storage
           mountPath: /var/www/html
-  volumeClaimTemplates:  # ADD THIS SECTION
-  - metadata:
-      name: wordpress-storage
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 5Gi
+      volumes:
+      - name: wordpress-storage
+        emptyDir: {}  # Temporary storage
