@@ -5,4 +5,5 @@ resources:
   - mariadb/mariadb-service.yaml
   - mariadb/mariadb-statefulset.yaml
   - mariadb/mariadb-pvc.yaml
+  - ../secrets/wordpress-secret.sops.yaml
 
