@@ -1,3 +1,4 @@
+# applications/nginx-ingress/helm-release.yaml
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -17,37 +18,39 @@ spec:
   values:
     controller:
       replicaCount: 2
-
       service:
         type: LoadBalancer
 
-      # Mount LUA script
+      # Fixed volume mounts
       extraVolumeMounts:
         - name: lua-scripts
-          mountPath: /etc/nginx/lua/404-redirect.lua
-          subPath: 404-redirect.lua
+          mountPath: /etc/nginx/lua/  # Mount as directory, not file
+          readOnly: true
 
       extraVolumes:
         - name: lua-scripts
           configMap:
             name: nginx-lua-scripts
+            defaultMode: 0755
 
       config:
         allow-snippet-annotations: "true"
-
-        # IMPORTANT: Do NOT include lua_package_path (already added by ingress-nginx)
+        
+        # ADD the lua package path to include your custom scripts
+        lua-package-path: "/etc/nginx/lua/?.lua;;"
+        
         http-snippet: |
           init_by_lua_block {
             require("404-redirect")
           }
 
-        # GLOBAL 404 REDIRECT
         server-snippet: |
           header_filter_by_lua_block {
             if ngx.status == 404 then
-              ngx.header["Location"] = "https://google.com";
-              ngx.status = 302;
-              ngx.header.content_length = nil;
+              ngx.header["Location"] = "https://google.com"
+              ngx.status = 302
+              ngx.header.content_length = nil
+              ngx.exit(ngx.HTTP_OK)
             end
           }
 
@@ -63,4 +66,3 @@ spec:
 
     admissionWebhooks:
       enabled: false
-

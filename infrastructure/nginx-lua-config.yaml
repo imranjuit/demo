@@ -1,3 +1,4 @@
+# infrastructure/nginx-lua-config.yaml - Keep only ONE of these
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,5 +6,7 @@ metadata:
   namespace: ingress-nginx
 data:
   404-redirect.lua: |
-    return {}
-
+    ngx.log(ngx.INFO, "404 redirect handler loaded")
+    
+    -- Custom 404 redirect logic can be added here
+    -- This file is loaded via init_by_lua_block
