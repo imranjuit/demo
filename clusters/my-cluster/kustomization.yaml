@@ -7,3 +7,4 @@ resources:
   - ../../databases
   - ../../applications
   - ../../applications/nginx-ingress
+  - ../../monitoring

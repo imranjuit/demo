@@ -1,0 +1,70 @@
+# monitoring/prometheus-stack.yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: "58.0.0"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+  values:
+    defaultRules:
+      rules:
+        alertmanager: true
+        etcd: false
+        configReloaders: true
+        general: true
+        k8s: true
+        kubeApiserver: true
+        kubePrometheusGeneral: true
+        kubeProxy: true
+        kubeScheduler: true
+        kubernetesApps: true
+        kubernetesResources: true
+        kubernetesStorage: true
+        network: true
+        node: true
+        nodeExporterAlerting: true
+        prometheus: true
+        prometheusOperator: true
+
+    prometheus:
+      prometheusSpec:
+        retention: 30d
+        retentionSize: 45GB
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        resources:
+          requests:
+            memory: 400Mi
+            cpu: 200m
+          limits:
+            memory: 2Gi
+            cpu: 500m
+
+    alertmanager:
+      enabled: true
+      alertmanagerSpec:
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m
+
+    grafana:
+      enabled: false  # We'll use standalone Grafana
+
+    nodeExporter:
+      enabled: true
+
+    kubeStateMetrics:
+      enabled: true
