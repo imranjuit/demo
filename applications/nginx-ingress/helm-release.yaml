@@ -21,7 +21,6 @@ spec:
       service:
         type: LoadBalancer
 
-      # Mount LUA scripts into the container
       extraVolumeMounts:
         - name: lua-scripts
           mountPath: /etc/nginx/lua/404-redirect.lua
@@ -35,20 +34,20 @@ spec:
       config:
         allow-snippet-annotations: "true"
 
-        # Load Lua script + enable Lua path
+        # Load Lua path + load script
         http-snippet: |
           lua_package_path "/etc/nginx/lua/?.lua;;";
           init_by_lua_block {
             require("404-redirect")
           }
 
-        # Global 404 redirect
+        # GLOBAL redirect for all 404 responses
         server-snippet: |
           header_filter_by_lua_block {
             if ngx.status == 404 then
-              ngx.header["Location"] = "https://google.com"
-              ngx.status = 302
-              ngx.header.content_length = nil
+              ngx.header["Location"] = "https://google.com";
+              ngx.status = 302;
+              ngx.header.content_length = nil;
             end
           }
 
