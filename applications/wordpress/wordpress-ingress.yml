@@ -6,7 +6,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    # Custom 404 redirect for this specific ingress
     nginx.ingress.kubernetes.io/configuration-snippet: |
       error_page 404 =302 https://google.com;
     nginx.ingress.kubernetes.io/server-snippet: |

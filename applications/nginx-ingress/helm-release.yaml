@@ -21,6 +21,7 @@ spec:
       config:
         ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384"
         # Enable Lua and load our custom script
+        allow-snippet-annotations: "true"
         http-snippet: |
           lua_package_path "/etc/nginx/lua/?.lua;;";
           init_by_lua_block {
