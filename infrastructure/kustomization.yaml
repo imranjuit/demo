@@ -5,3 +5,4 @@ resources:
   - namespace.yaml
   - nginx-ingress-namespace.yaml
   - repo-nginx.yml
+  - nginx-lua-config.yaml

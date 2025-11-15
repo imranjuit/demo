@@ -20,6 +20,26 @@ spec:
         type: LoadBalancer
       config:
         ssl-ciphers: "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384"
+        # Enable Lua and load our custom script
+        http-snippet: |
+          lua_package_path "/etc/nginx/lua/?.lua;;";
+          init_by_lua_block {
+            require("404-redirect")
+          }
+      # Mount the Lua scripts
+      extraVolumeMounts:
+        - name: lua-scripts
+          mountPath: /etc/nginx/lua/404-redirect.lua
+          subPath: 404-redirect.lua
+      # Global 404 redirect for all servers
+      serverSnippet: |
+        header_filter_by_lua_block {
+          if ngx.status == 404 then
+            ngx.header["Location"] = "https://google.com"
+            ngx.status = 302
+            ngx.header.content_length = nil
+          end
+        }
       resources:
         limits:
           cpu: 200m
@@ -27,13 +47,11 @@ spec:
         requests:
           cpu: 100m
           memory: 90Mi
-      # Add custom Lua configuration
-      configAnnotations:
-        nginx.ingress.kubernetes.io/server-snippet: |
-          header_filter_by_lua_block {
-            if ngx.status == 404 then
-              ngx.header["Location"] = "https://google.com"
-              ngx.status = 302
-              ngx.header.content_length = nil
-            end
-          }
+    # Mount the ConfigMap as volume
+    extraVolumes:
+      - name: lua-scripts
+        configMap:
+          name: nginx-lua-scripts
+    # Disable admission webhooks to avoid issues
+    admissionWebhooks:
+      enabled: false
