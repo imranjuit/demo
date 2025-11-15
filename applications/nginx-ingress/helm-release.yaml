@@ -16,11 +16,12 @@ spec:
 
   values:
     controller:
-      replicaCount: 1
+      replicaCount: 2
 
       service:
         type: LoadBalancer
 
+      # Mount LUA script
       extraVolumeMounts:
         - name: lua-scripts
           mountPath: /etc/nginx/lua/404-redirect.lua
@@ -34,14 +35,13 @@ spec:
       config:
         allow-snippet-annotations: "true"
 
-        # Load Lua path + load script
+        # IMPORTANT: Do NOT include lua_package_path (already added by ingress-nginx)
         http-snippet: |
-          lua_package_path "/etc/nginx/lua/?.lua;;";
           init_by_lua_block {
             require("404-redirect")
           }
 
-        # GLOBAL redirect for all 404 responses
+        # GLOBAL 404 REDIRECT
         server-snippet: |
           header_filter_by_lua_block {
             if ngx.status == 404 then

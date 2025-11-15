@@ -5,8 +5,5 @@ metadata:
   namespace: ingress-nginx
 data:
   404-redirect.lua: |
-    -- No logic needed here unless you want
-    -- to extend functionality later
-    -- This loads successfully via init_by_lua_block
     return {}
 
